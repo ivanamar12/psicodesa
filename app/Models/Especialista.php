@@ -11,13 +11,13 @@ class Especialista extends Model
 
     protected $fillable = ['nombre', 'apellido', 'ci', 'fecha_nac', 'especialidad', 'telefono', 'email','genero_id', 'direccion_id'];
 
-    public function direccions(){
+    public function direccion(){
 
     	return $this->belongsTo(Direccion::class);
     	
     }
 
-    public function generos(){
+    public function genero(){
 
     	return $this->belongsTo(Genero::class);
     	

@@ -1,17 +1,7 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\EspecialistaController;
+use App\Http\Controllers\SecretariaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,6 +15,21 @@ require __DIR__.'/auth.php';
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::resource('Especialistas','App\Http\Controllers\EspecialistaController');
-Route::resource('Secretarias','App\Http\Controllers\SecretariaController');
+Route::group(['prefix' => 'especialistas', 'middleware' => 'auth'], function () {
+    Route::get('/', [EspecialistaController::class, 'indexweb'])->name('especialistas.index'); 
+    Route::get('/data', [EspecialistaController::class, 'index'])->name('especialistas.data'); // Nueva ruta para JSON
+    Route::post('/', [EspecialistaController::class, 'store'])->name('especialistas.store'); 
+    Route::get('/{id}', [EspecialistaController::class, 'show'])->name('especialistas.show'); 
+    Route::put('/{id}', [EspecialistaController::class, 'update'])->name('especialistas.update'); 
+    Route::delete('/{id}', [EspecialistaController::class, 'destroy'])->name('especialistas.destroy'); 
+});
+
+
+
+Route::group(['prefix' => 'secretarias', 'middleware' => 'auth'], function () {
+    Route::get('/', [SecretariaController::class, 'index'])->name('secretarias.index'); 
+    Route::post('/', [SecretariaController::class, 'store'])->name('secretarias.store'); 
+    Route::get('/{id}', [SecretariaController::class, 'show'])->name('secretarias.show'); 
+    Route::put('/{id}', [SecretariaController::class, 'update'])->name('secretarias.update'); 
+    Route::delete('/{id}', [SecretariaController::class, 'destroy'])->name('secretarias.destroy'); 
+});

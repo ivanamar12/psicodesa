@@ -1,6 +1,6 @@
-const selectEstado = document.getElementById("selectEstado");
-const selectMunicipio = document.getElementById('selectMunicipio')
-const selectParroquia = document.getElementById('selectParroquia')
+const estado_id = document.getElementById("estado_id");
+const municipio_id = document.getElementById('municipio_id')
+const parroquia_id = document.getElementById('parroquia_id')
 
 const showMunicipios = (filteredMunicipios)=> {
 	selectMunicipio.innerHTML = '<option value="0">Municipio</option>';
@@ -9,7 +9,7 @@ const showMunicipios = (filteredMunicipios)=> {
 		const option = document.createElement("OPTION")
 		option.value = item.id
 		option.text = item.municipio 
-		selectMunicipio.appendChild(option)	
+		municipio_id.appendChild(option)	
 	})
 }
 
@@ -18,18 +18,18 @@ const filterMunicipios = id => {
 	showMunicipios(filteredMunicipios)
 }
 
-selectEstado.addEventListener('change', e => {
+estado_id.addEventListener('change', e => {
   filterMunicipios(e.target.value)
 })
 
 const showParroquias = (filteredParroquias)=> {
-	selectParroquia.innerHTML = '<option value="0">Parroquia</option>';
+	parroquia_id.innerHTML = '<option value="0">Parroquia</option>';
 
 	filteredParroquias.forEach(item => {
 		const option = document.createElement("OPTION")
 		option.value = item.id
 		option.text = item.parroquia 
-		selectParroquia.appendChild(option)	
+		parroquia_id.appendChild(option)	
 	})
 }
 
@@ -38,6 +38,6 @@ const filterParroquias = id => {
 	showParroquias(filteredParroquias)
 }
 
-selectMunicipio.addEventListener('change', e => {
+municipio_id.addEventListener('change', e => {
   filterParroquias(e.target.value)
 })

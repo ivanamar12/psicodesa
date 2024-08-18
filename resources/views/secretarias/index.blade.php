@@ -5,31 +5,46 @@
 @section('content_header')
     <h1>Secretarias</h1>
 @stop
-@include('secretarias.modals.create')
-@include('secretarias.modals.edit')
-@include('secretarias.modals.delete')
 
 @section('content')
 
-<a href="#" class="btn btn-primary btn-circle" data-toggle="modal" data-target="#createSecretaria">Nuevo Secretaria<i class="fas fa-plus"></i></a><br>
+@php
 
+$heads = [
+    'ID',
+    'Name',
+    ['label' => 'Phone', 'width' => 40],
+    ['label' => 'Actions', 'no-export' => true, 'width' => 5],
+];
 
-<table id="secretarias" class="table table-striped" style="width:100%">
-            <thead>
-                <tr class="">
-                    <th>id</th>
-                    <th>Nombres</th>
-                    <th>Apellidos</th>
-                    <th>Cedula</th>
-                    <th>Especialidad</th>
-                    <th>Correo</th>
-                    <th>Telefono</th>
-                    <th>Genero</th>
-                    <th>acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-        </table>
+$btnEdit = '<button class="btn btn-xs btn-default text-primary mx-1 shadow" title="Edit">
+                <i class="fa fa-lg fa-fw fa-pen"></i>
+            </button>';
+$btnDelete = '<button class="btn btn-xs btn-default text-danger mx-1 shadow" title="Delete">
+                  <i class="fa fa-lg fa-fw fa-trash"></i>
+              </button>';
+$btnDetails = '<button class="btn btn-xs btn-default text-teal mx-1 shadow" title="Details">
+                   <i class="fa fa-lg fa-fw fa-eye"></i>
+               </button>';
+
+$config = [
+    'data' => [
+    ],
+    'order' => [[1, 'asc']],
+    'columns' => [null, null, null, ['orderable' => false]],
+];
+@endphp
+
+<x-adminlte-datatable id="table1" :heads="$heads">
+    @foreach($config['data'] as $row)
+        <tr>
+            @foreach($row as $cell)
+                <td>{!! $cell !!}</td>
+            @endforeach
+        </tr>
+    @endforeach
+</x-adminlte-datatable>
+
 @stop
 
 @section('css')
@@ -47,24 +62,4 @@
     <script src="/js/dataTables.js"></script>
     <script src="/js/dataTables.bootstrap5.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/fecha.js"></script>
-    <script src="/js/direccion.js"></script>
-    <script src="/js/crud.js"></script>
-
-    <script>
-        $(document).ready(function(){
-            $('#secretarias').DataTable();
-        })
-    </script>
-    
-    <script>
-        $(document).ready(function() {
-            $('#miDataTable').DataTable();
-        });
-    </script>
-    <script type="text/javascript">
-  const estados = <?php echo json_encode($estados); ?>;
-  const municipios = <?php echo json_encode($municipios); ?>;
-  const parroquias = <?php echo json_encode($parroquias); ?>;
-</script>
 @stop

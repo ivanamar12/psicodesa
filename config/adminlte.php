@@ -312,15 +312,16 @@ return [
         ],
         ['header' => 'Modulos'],
         [
-            'text' => 'Especialistas',
-            'icon' => 'fas fa-fw fa-users',
-            'route' => 'Especialistas.index',
-        ],
-                [
-            'text' => 'Secretarias',
-            'icon' => 'fas fa-fw fa-users',
-            'route' => 'Secretarias.index',
-        ],
+    'text' => 'Especialistas',
+    'icon' => 'fas fa-fw fa-users',
+    'route' => 'especialistas.index', // Cambia a minúsculas
+],
+[
+    'text' => 'Secretarias',
+    'icon' => 'fas fa-fw fa-users',
+    'route' => 'secretarias.index', // Cambia a minúsculas
+],
+
         [
             'text' => 'change_password',
             'url' => 'admin/settings',
