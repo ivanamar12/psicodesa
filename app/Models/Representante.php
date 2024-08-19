@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Secretaria extends Model
+class Representante extends Model
 {
     use HasFactory;
      protected $fillable = ['nombre', 'apellido', 'ci', 'fecha_nac', 'grado', 'telefono', 'email','genero_id', 'direccion_id'];
@@ -20,5 +20,11 @@ class Secretaria extends Model
 
         return $this->belongsTo(Genero::class);
         
+    }
+
+    public function pacientes(){
+
+        return $this->hasMany(Paciente::class);
+         
     }
 }

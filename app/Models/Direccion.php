@@ -11,19 +11,19 @@ class Direccion extends Model
 
       protected $fillable = ['estado_id', 'municipio_id', 'parroquia_id', 'sector'];
 
-      public function estados(){
+      public function estado(){
 
     	return $this->belongsTo(Estado::class);
     	
     }
 
-       public function municipios(){
+       public function municipio(){
 
     	return $this->belongsTo(Municipio::class);
     	
     }
 
-       public function parroquias(){
+       public function parroquia(){
 
     	return $this->belongsTo(Parroquia::class);
     	
@@ -40,4 +40,10 @@ class Direccion extends Model
         return $this->hasMany(Secretaria::class);
          
     }
+
+    public function representantes(){
+
+      return $this->hasMany(Representante::class);
+       
+  }
 }

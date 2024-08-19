@@ -5,11 +5,11 @@ $(document).ready(function() {
     var yyyy = hoy.getFullYear();
     hoy = yyyy + '-' + mm + '-' + dd; 
 
-    $('#fecha').attr('max', hoy); 
+    $('#fecha_nac').attr('max', hoy); 
 
-    $('#fecha').on('change', function() {
-        var fechaSeleccionada = $(this).val();
-        if (fechaSeleccionada > hoy) {
+    $('#fecha_nac').on('change', function() {
+        var fecha_nacSeleccionada = $(this).val();
+        if (fecha_nacSeleccionada > hoy) {
             $('#mensaje').text('Por favor, selecciona una fecha que no sea futura.').show();
             $(this).val(''); 
         } else {

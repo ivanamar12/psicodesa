@@ -1,26 +1,35 @@
 @extends('adminlte::page')
 
-@section('title', 'Secretarias')
+@section('title', 'Pacientes')
 
 @section('content_header')
-<h1>Secretarias</h1>
+<h1>Pacientes</h1>
 @stop
 
 @section('content')
 
-<div class="modal fade" id="secretariaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="pacienteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header" style="background: rgb(0, 204, 204); background: linear-gradient(90deg, rgb(0, 153, 204) 0%, rgb(0, 204, 204) 100%);">
-        <h5 class="modal-title" id="exampleModalLabel">Secretaria</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Paciente</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form id="secretariaForm">
-          <input type="hidden" id="secretariaId">
+        <form id="pacienteForm">
+          <input type="hidden" id="pacienteId">
           <div class="form-group row">
+          <div class="col-12 col-lg-3 mb-2">
+              <label for="representante_id" class="form-label">Representante *</label>
+              <select class="form-control form-control-solid select2" required style="width: 100%;" id="genero_id">
+                <option selected>Seleccione un representante</option>
+                @foreach ($representantes as $representante)
+                <option value="{{$representante->id}}">{{$representante->nombre}}</option>
+                @endforeach
+              </select>
+            </div>
             <div class="col-12 col-lg-3 mb-2">
               <label for="nombre" class="form-label">Nombres *</label>
               <input type="text" class="form-control" id="nombre" placeholder="Nombres de pila" title="Nombres" required>
@@ -60,8 +69,6 @@
                 @endforeach
               </select>
             </div>
-
-
             <div class="col-12 col-lg-3 mb-2">
               <label for="estado_id" class="form-label">Estado *</label>
               <select class="form-control form-control-solid select2" required style="width: 100%;" id="estado_id">
@@ -82,7 +89,7 @@
               <input type="text" class="form-control" id="sector" required placeholder="cas/edif/apt/ #, calle/vereda/avenida #, nombre del sector" title="Sector">
             </div>
             <label><b>(*)Campos obligatorios</b></label><br>
-            <a href="/secretarias" class="btn btn-secondary" tabindex="5">Cancelar</a>
+            <a href="/pacientes" class="btn btn-secondary" tabindex="5">Cancelar</a>
             <button type="submit" class="btn btn-primary" tabindex="5">Agregar</button>
           </div>
         </form>
@@ -91,7 +98,7 @@
   </div>
 </div>
 
-<button class="btn btn-primary" data-toggle="modal" data-target="#secretariaModal" id="createBtn">Nuevo Secretaria</button>
+<button class="btn btn-primary" data-toggle="modal" data-target="#pacienteModal" id="createBtn">Nuevo Paciente</button>
 <table id="table1">
   <thead>
     <tr>
@@ -105,7 +112,7 @@
       <th>Acciones</th>
     </tr>
   </thead>
-  <tbody id="secretariaList">
+  <tbody id="pacienteList">
     <!-- Los datos se insertan aquí -->
   </tbody>
 </table>
@@ -186,22 +193,22 @@
 
 <script>
   $(document).ready(function() {
-    function getSecretarias() {
-      $.get('/secretarias/data', function(data) {
-        $('#secretariaList').empty();
-        data.forEach(secretaria => {
-          $('#secretariaList').append(`
+    function getPacientes() {
+      $.get('/pacientes/data', function(data) {
+        $('#pacienteList').empty();
+        data.forEach(paciente => {
+          $('#pacienteList').append(`
                     <tr>
-                        <td>${secretaria.id}</td>
-                        <td>${secretaria.nombre}</td>
-                        <td>${secretaria.apellido}</td>
-                        <td>${secretaria.ci}</td>
-                        <td>${secretaria.grado}</td>
-                        <td>${secretaria.email}</td>
-                        <td>${secretaria.telefono}</td>
+                        <td>${paciente.id}</td>
+                        <td>${paciente.nombre}</td>
+                        <td>${paciente.apellido}</td>
+                        <td>${paciente.ci}</td>
+                        <td>${paciente.grado}</td>
+                        <td>${paciente.email}</td>
+                        <td>${paciente.telefono}</td>
                         <td>
-                           <button class="btn btn-warning btn-sm" onclick="editSecretaria(${secretaria.id})">Editar</button>
-                           <button class="btn btn-danger btn-sm" onclick="deleteSecretaria(${secretaria.id})">Eliminar</button>
+                           <button class="btn btn-warning btn-sm" onclick="editPaciente(${paciente.id})">Editar</button>
+                           <button class="btn btn-danger btn-sm" onclick="deletePaciente(${paciente.id})">Eliminar</button>
                         </td>
                     </tr>
                 `);
@@ -209,22 +216,22 @@
         $('#table1').DataTable();
       });
     }
-    getSecretarias();
+    getPacientes();
 
 
     $('#createBtn').click(function(e) {
       e.preventDefault();
-      $('#secretariaId').val('');
-      $('#secretariaForm')[0].reset();
-      $('#exampleModalLabel').text('Registrar Secretaria');
-      $('#secretariaModal').modal('show');
+      $('#pacienteId').val('');
+      $('#pacienteForm')[0].reset();
+      $('#exampleModalLabel').text('Registrar Paciente');
+      $('#pacienteModal').modal('show');
     });
 
     // Enviar el formulario
-    $('#secretariaForm').submit(function(e) {
+    $('#pacienteForm').submit(function(e) {
       e.preventDefault();
-      let id = $('#secretariaId').val();
-      let url = id ? `/secretarias/${id}` : '/secretarias';
+      let id = $('#pacienteId').val();
+      let url = id ? `/pacientes/${id}` : '/pacientes';
       let method = id ? 'PUT' : 'POST';
 
       $.ajax({
@@ -238,6 +245,7 @@
           grado: $('#grado').val(),
           telefono: $('#telefono').val(),
           email: $('#email').val(),
+          representante_id: $('#representante_id').val(),
           genero_id: $('#genero_id').val(),
           estado_id: $('#estado_id').val(),
           municipio_id: $('#municipio_id').val(),
@@ -246,10 +254,10 @@
           _token: '{{ csrf_token() }}'
         },
         success: function(response) {
-          $('#secretariaForm')[0].reset(); // Limpiar el formulario
-          $('#secretariaId').val(''); // Limpiar el ID
-          $('#secretariaModal').modal('hide'); // Cerrar el modal
-          getSecretarias(); // Actualizar la lista de secretaria
+          $('#pacienteForm')[0].reset(); // Limpiar el formulario
+          $('#pacienteId').val(''); // Limpiar el ID
+          $('#pacienteModal').modal('hide'); // Cerrar el modal
+          getPacientes(); // Actualizar la lista de paciente
         },
         error: function(xhr) {
           alert('Error: ' + xhr.responseText); // Manejar errores
@@ -259,9 +267,9 @@
   });
 
 
-  function editSecretaria(id) {
-    $.get(`/secretarias/${id}`, function(data) {
-      $('#secretariaId').val(data.id);
+  function editPaciente(id) {
+    $.get(`/pacientes/${id}`, function(data) {
+      $('#pacienteId').val(data.id);
       $('#nombre').val(data.nombre);
       $('#apellido').val(data.apellido);
       $('#ci').val(data.ci);
@@ -269,26 +277,27 @@
       $('#grado').val(data.grado);
       $('#telefono').val(data.telefono);
       $('#email').val(data.email);
+      $('#representante_id').val(data.representante_id);
       $('#genero_id').val(data.genero_id);
       $('#estado_id').val(data.estado_id);
       $('#municipio_id').val(data.municipio_id);
       $('#parroquia_id').val(data.parroquia_id);
       $('#sector').val(data.sector);
-      $('#exampleModalLabel').text('Editar Secretaria'); // Cambiar el título
-      $('#secretariaModal').modal('show'); // Mostrar el modal
+      $('#exampleModalLabel').text('Editar paciente'); // Cambiar el título
+      $('#pacienteModal').modal('show'); // Mostrar el modal
     });
   }
 
-  function deleteSecretaria(id) {
-    if (confirm('¿Estás seguro de que deseas eliminar este secretaria?')) {
+  function deletePaciente(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este paciente?')) {
       $.ajax({
-        url: `/secretarias/${id}`,
+        url: `/pacientes/${id}`,
         method: 'DELETE',
         data: {
           _token: '{{ csrf_token() }}'
         },
         success: function(response) {
-          getSecretarias();
+          getPacientes();
         },
         error: function(xhr) {
           alert('Error: ' + xhr.responseText);

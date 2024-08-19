@@ -22,4 +22,10 @@ class Genero extends Model
         return $this->hasMany(Secretaria::class);
          
     }
+
+    public function representantes(){
+
+        return $this->hasMany(Representante::class);
+         
+    }
 }

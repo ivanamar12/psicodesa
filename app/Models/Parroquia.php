@@ -11,7 +11,7 @@ class Parroquia extends Model
 
     protected $fillable = ['parroquia'];
 
-    public function municipios(){
+    public function municipio(){
 
     	return $this->belongsTo(Municipio::class);
     	

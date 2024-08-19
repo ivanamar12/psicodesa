@@ -11,7 +11,7 @@ class Municipio extends Model
 
      protected $fillable = ['municipio'];
 
-    public function estados(){
+    public function estado(){
 
     	return $this->belongsTo(Estado::class);
     	

@@ -1,25 +1,25 @@
 @extends('adminlte::page')
 
-@section('title', 'Secretarias')
+@section('title', 'Representantes')
 
 @section('content_header')
-<h1>Secretarias</h1>
+<h1>Representantes</h1>
 @stop
 
 @section('content')
 
-<div class="modal fade" id="secretariaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="representanteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl">
     <div class="modal-content">
       <div class="modal-header" style="background: rgb(0, 204, 204); background: linear-gradient(90deg, rgb(0, 153, 204) 0%, rgb(0, 204, 204) 100%);">
-        <h5 class="modal-title" id="exampleModalLabel">Secretaria</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Representante</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form id="secretariaForm">
-          <input type="hidden" id="secretariaId">
+        <form id="representanteForm">
+          <input type="hidden" id="representanteId">
           <div class="form-group row">
             <div class="col-12 col-lg-3 mb-2">
               <label for="nombre" class="form-label">Nombres *</label>
@@ -82,7 +82,7 @@
               <input type="text" class="form-control" id="sector" required placeholder="cas/edif/apt/ #, calle/vereda/avenida #, nombre del sector" title="Sector">
             </div>
             <label><b>(*)Campos obligatorios</b></label><br>
-            <a href="/secretarias" class="btn btn-secondary" tabindex="5">Cancelar</a>
+            <a href="/representantes" class="btn btn-secondary" tabindex="5">Cancelar</a>
             <button type="submit" class="btn btn-primary" tabindex="5">Agregar</button>
           </div>
         </form>
@@ -91,7 +91,7 @@
   </div>
 </div>
 
-<button class="btn btn-primary" data-toggle="modal" data-target="#secretariaModal" id="createBtn">Nuevo Secretaria</button>
+<button class="btn btn-primary" data-toggle="modal" data-target="#representanteModal" id="createBtn">Nuevo Representante</button>
 <table id="table1">
   <thead>
     <tr>
@@ -105,7 +105,7 @@
       <th>Acciones</th>
     </tr>
   </thead>
-  <tbody id="secretariaList">
+  <tbody id="representanteList">
     <!-- Los datos se insertan aquí -->
   </tbody>
 </table>
@@ -186,22 +186,22 @@
 
 <script>
   $(document).ready(function() {
-    function getSecretarias() {
-      $.get('/secretarias/data', function(data) {
-        $('#secretariaList').empty();
-        data.forEach(secretaria => {
-          $('#secretariaList').append(`
+    function getRepresentantes() {
+      $.get('/representantes/data', function(data) {
+        $('#representanteList').empty();
+        data.forEach(representante => {
+          $('#representanteList').append(`
                     <tr>
-                        <td>${secretaria.id}</td>
-                        <td>${secretaria.nombre}</td>
-                        <td>${secretaria.apellido}</td>
-                        <td>${secretaria.ci}</td>
-                        <td>${secretaria.grado}</td>
-                        <td>${secretaria.email}</td>
-                        <td>${secretaria.telefono}</td>
+                        <td>${representante.id}</td>
+                        <td>${representante.nombre}</td>
+                        <td>${representante.apellido}</td>
+                        <td>${representante.ci}</td>
+                        <td>${representante.grado}</td>
+                        <td>${representante.email}</td>
+                        <td>${representante.telefono}</td>
                         <td>
-                           <button class="btn btn-warning btn-sm" onclick="editSecretaria(${secretaria.id})">Editar</button>
-                           <button class="btn btn-danger btn-sm" onclick="deleteSecretaria(${secretaria.id})">Eliminar</button>
+                           <button class="btn btn-warning btn-sm" onclick="editRepresentante(${representante.id})">Editar</button>
+                           <button class="btn btn-danger btn-sm" onclick="deleteRepresentante(${representante.id})">Eliminar</button>
                         </td>
                     </tr>
                 `);
@@ -209,22 +209,22 @@
         $('#table1').DataTable();
       });
     }
-    getSecretarias();
+    getRepresentantes();
 
 
     $('#createBtn').click(function(e) {
       e.preventDefault();
-      $('#secretariaId').val('');
-      $('#secretariaForm')[0].reset();
-      $('#exampleModalLabel').text('Registrar Secretaria');
-      $('#secretariaModal').modal('show');
+      $('#representanteId').val('');
+      $('#representanteForm')[0].reset();
+      $('#exampleModalLabel').text('Registrar Representante');
+      $('#representantesModal').modal('show');
     });
 
     // Enviar el formulario
-    $('#secretariaForm').submit(function(e) {
+    $('#representanteForm').submit(function(e) {
       e.preventDefault();
-      let id = $('#secretariaId').val();
-      let url = id ? `/secretarias/${id}` : '/secretarias';
+      let id = $('#representanteId').val();
+      let url = id ? `/representantes/${id}` : '/representantes';
       let method = id ? 'PUT' : 'POST';
 
       $.ajax({
@@ -246,10 +246,10 @@
           _token: '{{ csrf_token() }}'
         },
         success: function(response) {
-          $('#secretariaForm')[0].reset(); // Limpiar el formulario
-          $('#secretariaId').val(''); // Limpiar el ID
-          $('#secretariaModal').modal('hide'); // Cerrar el modal
-          getSecretarias(); // Actualizar la lista de secretaria
+          $('#representanteForm')[0].reset(); // Limpiar el formulario
+          $('#representanteId').val(''); // Limpiar el ID
+          $('#representanteModal').modal('hide'); // Cerrar el modal
+          getRepresentantes(); // Actualizar la lista de representante
         },
         error: function(xhr) {
           alert('Error: ' + xhr.responseText); // Manejar errores
@@ -259,9 +259,9 @@
   });
 
 
-  function editSecretaria(id) {
-    $.get(`/secretarias/${id}`, function(data) {
-      $('#secretariaId').val(data.id);
+  function editRepresentante(id) {
+    $.get(`/representantes/${id}`, function(data) {
+      $('#representanteId').val(data.id);
       $('#nombre').val(data.nombre);
       $('#apellido').val(data.apellido);
       $('#ci').val(data.ci);
@@ -274,21 +274,21 @@
       $('#municipio_id').val(data.municipio_id);
       $('#parroquia_id').val(data.parroquia_id);
       $('#sector').val(data.sector);
-      $('#exampleModalLabel').text('Editar Secretaria'); // Cambiar el título
-      $('#secretariaModal').modal('show'); // Mostrar el modal
+      $('#exampleModalLabel').text('Editar representante'); // Cambiar el título
+      $('#representanteModal').modal('show'); // Mostrar el modal
     });
   }
 
-  function deleteSecretaria(id) {
-    if (confirm('¿Estás seguro de que deseas eliminar este secretaria?')) {
+  function deleteRepresentante(id) {
+    if (confirm('¿Estás seguro de que deseas eliminar este representante?')) {
       $.ajax({
-        url: `/secretarias/${id}`,
+        url: `/representantes/${id}`,
         method: 'DELETE',
         data: {
           _token: '{{ csrf_token() }}'
         },
         success: function(response) {
-          getSecretarias();
+          getRepresentantes();
         },
         error: function(xhr) {
           alert('Error: ' + xhr.responseText);

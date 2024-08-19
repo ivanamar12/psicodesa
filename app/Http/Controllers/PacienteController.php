@@ -3,24 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Secretaria;
+use App\Models\Paciente;
+use App\Models\Representante;
 use App\Models\Genero;
 use App\Models\Estado;
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use App\Models\Direccion;
 
-class SecretariaController extends Controller
+class PacienteController extends Controller
 {
     public function indexweb()
     {
-        $secretarias = Secretaria::all();
+        $pacientes = Paciente::all();
+        $representantes = Representante::all();
         $generos = Genero::all();
         $estados = Estado::all();
         $municipios = Municipio::all();
         $parroquias = Parroquia::all();
-        return view('secretarias.index', [
-            'secretarias' => $secretarias, 
+        return view('pacientes.index', [
+            'pacientes' => $pacientes,
+            'representantes' => $representantes, 
             'generos' => $generos,
             'estados' => $estados, 
             'municipios' => $municipios, 
@@ -30,8 +33,8 @@ class SecretariaController extends Controller
     
     public function index()
     {
-        $secretarias = Secretaria::all();
-        return response()->json($secretarias);
+        $pacientes = Paciente::all();
+        return response()->json($pacientes);
     }
     
     public function store(Request $request)
@@ -43,7 +46,8 @@ class SecretariaController extends Controller
             'fecha_nac' => 'required|date|max:10',
             'grado' => 'required|string|max:255',
             'telefono' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:secretarias,email',
+            'email' => 'required|string|email|max:255|unique:pacientes,email',
+            'representante_id' => 'required|exists:representantes,id',
             'genero_id' => 'required|exists:generos,id',
             'estado_id' => 'required|exists:estados,id',
             'municipio_id' => 'required|exists:municipios,id',
@@ -59,7 +63,7 @@ class SecretariaController extends Controller
                 'sector' => $validatedData['sector'],
             ]);
 
-            Secretaria::create([
+            Paciente::create([
                 'nombre' => $validatedData['nombre'],
                 'apellido' => $validatedData['apellido'],
                 'ci' => $validatedData['ci'],
@@ -67,18 +71,19 @@ class SecretariaController extends Controller
                 'grado' => $validatedData['grado'],
                 'telefono' => $validatedData['telefono'],
                 'email' => $validatedData['email'],
+                'representante_id' => $validatedData['representante_id'],
                 'genero_id' => $validatedData['genero_id'],
                 'direccion_id' => $direccion->id,
             ]);
         });
 
-        return redirect('/secretarias')->with('success', 'Secretaria registrado exitosamente.');
+        return redirect('/pacientes')->with('success', 'Paciente registrado exitosamente.');
     }
 
     public function show($id)
     {
-        $secretaria = Secretaria::find($id); 
-        return response()->json($secretaria); 
+        $paciente = Paciente::find($id); 
+        return response()->json($paciente); 
     }
     
     public function update(Request $request, $id)
@@ -90,7 +95,8 @@ class SecretariaController extends Controller
             'fecha_nac' => 'required|date|max:10',
             'grado' => 'required|string|max:255',
             'telefono' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:secretarias,email,' . $id,
+            'email' => 'required|string|email|max:255|unique:pacientes,email,' . $id,
+            'representante_id' => 'required|exists:representantes,id',
             'genero_id' => 'required|exists:generos,id',
             'estado_id' => 'required|exists:estados,id',
             'municipio_id' => 'required|exists:municipios,id',
@@ -99,14 +105,14 @@ class SecretariaController extends Controller
         ]);
         
     
-        $secretaria = Secretaria::with('direccion')->find($id); // Cargar la relación
-        if (!$secretaria) {
-            return response()->json(['message' => 'Secretaria no encontrado'], 404);
+        $paciente = Paciente::with('direccion')->find($id); // Cargar la relación
+        if (!$paciente) {
+            return response()->json(['message' => 'paciente no encontrado'], 404);
         }
     
-        \DB::transaction(function () use ($validatedData, $secretaria) {
+        \DB::transaction(function () use ($validatedData, $paciente) {
             // Actualizar dirección
-            $direccion = $secretaria->direccion; // Ahora debería estar disponible
+            $direccion = $paciente->direccion; // Ahora debería estar disponible
             if (!$direccion) {
                 throw new \Exception('Dirección no encontrada'); // Lanza una excepción si no se encuentra
             }
@@ -118,8 +124,8 @@ class SecretariaController extends Controller
                 'sector' => $validatedData['sector'],
             ]);
     
-            // Actualizar secretaria
-            $secretaria->update([
+            // Actualizar paciente
+            $paciente->update([
                 'nombre' => $validatedData['nombre'],
                 'apellido' => $validatedData['apellido'],
                 'ci' => $validatedData['ci'],
@@ -127,32 +133,33 @@ class SecretariaController extends Controller
                 'grado' => $validatedData['grado'],
                 'telefono' => $validatedData['telefono'],
                 'email' => $validatedData['email'],
+                'representante_id' => $validatedData['representante_id'],
                 'genero_id' => $validatedData['genero_id'],
             ]);
         });
     
-        return redirect('/secretarias')->with('success', 'Secretaria actualizado exitosamente.');
+        return redirect('/pacientes')->with('success', 'paciente actualizado exitosamente.');
     }
     
 
     public function destroy($id)
     {
-        $secretaria = Secretaria::with('direccion')->find($id); // Cargar la relación
-        if (!$secretaria) {
-            return response()->json(['message' => 'secretaria no encontrado'], 404);
+        $paciente = Paciente::with('direccion')->find($id); // Cargar la relación
+        if (!$paciente) {
+            return response()->json(['message' => 'paciente no encontrado'], 404);
         }
     
-        $direccion = $secretaria->direccion; // Ahora debería estar disponible
+        $direccion = $paciente->direccion; // Ahora debería estar disponible
         if (!$direccion) {
             return response()->json(['message' => 'Dirección no encontrada'], 404);
         }
     
-        \DB::transaction(function () use ($secretaria, $direccion) {
-            $secretaria->delete();
+        \DB::transaction(function () use ($paciente, $direccion) {
+            $paciente->delete();
             $direccion->delete();
         });
     
-        return response()->json(['message' => 'secretaria eliminado exitosamente.']);
+        return response()->json(['message' => 'paciente eliminado exitosamente.']);
     }
     
 

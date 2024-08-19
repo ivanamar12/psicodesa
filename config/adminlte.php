@@ -321,50 +321,16 @@ return [
     'icon' => 'fas fa-fw fa-users',
     'route' => 'secretarias.index', // Cambia a minúsculas
 ],
-
-        [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
-        ],
-        [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-                [
-                    'text' => 'level_one',
-                    'url' => '#',
-                ],
-            ],
-        ],
+[
+    'text' => 'Representantes',
+    'icon' => 'fas fa-fw fa-users',
+    'route' => 'representantes.index', // Cambia a minúsculas
+],
+[
+    'text' => 'Pacientes',
+    'icon' => 'fas fa-fw fa-users',
+    'route' => 'pacientes.index', // Cambia a minúsculas
+],
         ['header' => 'labels'],
         [
             'text' => 'important',

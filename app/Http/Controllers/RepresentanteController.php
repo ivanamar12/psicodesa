@@ -3,24 +3,24 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Secretaria;
+use App\Models\Representante;
 use App\Models\Genero;
 use App\Models\Estado;
 use App\Models\Municipio;
 use App\Models\Parroquia;
 use App\Models\Direccion;
 
-class SecretariaController extends Controller
+class RepresentanteController extends Controller
 {
     public function indexweb()
     {
-        $secretarias = Secretaria::all();
+        $representantes = Representante::all();
         $generos = Genero::all();
         $estados = Estado::all();
         $municipios = Municipio::all();
         $parroquias = Parroquia::all();
-        return view('secretarias.index', [
-            'secretarias' => $secretarias, 
+        return view('representantes.index', [
+            'representantes' => $representantes, 
             'generos' => $generos,
             'estados' => $estados, 
             'municipios' => $municipios, 
@@ -30,8 +30,8 @@ class SecretariaController extends Controller
     
     public function index()
     {
-        $secretarias = Secretaria::all();
-        return response()->json($secretarias);
+        $representantes = Representante::all();
+        return response()->json($representantes);
     }
     
     public function store(Request $request)
@@ -43,7 +43,7 @@ class SecretariaController extends Controller
             'fecha_nac' => 'required|date|max:10',
             'grado' => 'required|string|max:255',
             'telefono' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:secretarias,email',
+            'email' => 'required|string|email|max:255|unique:representantes,email',
             'genero_id' => 'required|exists:generos,id',
             'estado_id' => 'required|exists:estados,id',
             'municipio_id' => 'required|exists:municipios,id',
@@ -59,7 +59,7 @@ class SecretariaController extends Controller
                 'sector' => $validatedData['sector'],
             ]);
 
-            Secretaria::create([
+            Representante::create([
                 'nombre' => $validatedData['nombre'],
                 'apellido' => $validatedData['apellido'],
                 'ci' => $validatedData['ci'],
@@ -72,13 +72,13 @@ class SecretariaController extends Controller
             ]);
         });
 
-        return redirect('/secretarias')->with('success', 'Secretaria registrado exitosamente.');
+        return redirect('/representantes')->with('success', 'Representante registrado exitosamente.');
     }
 
     public function show($id)
     {
-        $secretaria = Secretaria::find($id); 
-        return response()->json($secretaria); 
+        $representante = Representante::find($id); 
+        return response()->json($representante); 
     }
     
     public function update(Request $request, $id)
@@ -90,7 +90,7 @@ class SecretariaController extends Controller
             'fecha_nac' => 'required|date|max:10',
             'grado' => 'required|string|max:255',
             'telefono' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:secretarias,email,' . $id,
+            'email' => 'required|string|email|max:255|unique:representantes,email,' . $id,
             'genero_id' => 'required|exists:generos,id',
             'estado_id' => 'required|exists:estados,id',
             'municipio_id' => 'required|exists:municipios,id',
@@ -99,14 +99,14 @@ class SecretariaController extends Controller
         ]);
         
     
-        $secretaria = Secretaria::with('direccion')->find($id); // Cargar la relación
-        if (!$secretaria) {
-            return response()->json(['message' => 'Secretaria no encontrado'], 404);
+        $representante = Representante::with('direccion')->find($id); // Cargar la relación
+        if (!$representante) {
+            return response()->json(['message' => 'representante no encontrado'], 404);
         }
     
-        \DB::transaction(function () use ($validatedData, $secretaria) {
+        \DB::transaction(function () use ($validatedData, $representante) {
             // Actualizar dirección
-            $direccion = $secretaria->direccion; // Ahora debería estar disponible
+            $direccion = $representante->direccion; // Ahora debería estar disponible
             if (!$direccion) {
                 throw new \Exception('Dirección no encontrada'); // Lanza una excepción si no se encuentra
             }
@@ -118,8 +118,8 @@ class SecretariaController extends Controller
                 'sector' => $validatedData['sector'],
             ]);
     
-            // Actualizar secretaria
-            $secretaria->update([
+            // Actualizar representante
+            $representante->update([
                 'nombre' => $validatedData['nombre'],
                 'apellido' => $validatedData['apellido'],
                 'ci' => $validatedData['ci'],
@@ -131,28 +131,28 @@ class SecretariaController extends Controller
             ]);
         });
     
-        return redirect('/secretarias')->with('success', 'Secretaria actualizado exitosamente.');
+        return redirect('/representantes')->with('success', 'representante actualizado exitosamente.');
     }
     
 
     public function destroy($id)
     {
-        $secretaria = Secretaria::with('direccion')->find($id); // Cargar la relación
-        if (!$secretaria) {
-            return response()->json(['message' => 'secretaria no encontrado'], 404);
+        $representante = Representante::with('direccion')->find($id); // Cargar la relación
+        if (!$representante) {
+            return response()->json(['message' => 'representante no encontrado'], 404);
         }
     
-        $direccion = $secretaria->direccion; // Ahora debería estar disponible
+        $direccion = $representante->direccion; // Ahora debería estar disponible
         if (!$direccion) {
             return response()->json(['message' => 'Dirección no encontrada'], 404);
         }
     
-        \DB::transaction(function () use ($secretaria, $direccion) {
-            $secretaria->delete();
+        \DB::transaction(function () use ($representante, $direccion) {
+            $representante->delete();
             $direccion->delete();
         });
     
-        return response()->json(['message' => 'secretaria eliminado exitosamente.']);
+        return response()->json(['message' => 'representante eliminado exitosamente.']);
     }
     
 
